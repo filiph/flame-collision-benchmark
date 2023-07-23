@@ -1,0 +1,28 @@
+name: flame_collisions_benchmark
+description: A collisions benchmark for Flame engine
+publish_to: 'none'
+
+version: 0.0.1
+
+environment:
+  sdk: '>=3.0.6 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flame:
+    path: ../flame-engine/packages/flame
+  meta: ^1.8.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flame_lint: ^1.0.0
+  test: any
+
+# The following section is specific to Flutter packages.
+flutter:
+  uses-material-design: true
+
