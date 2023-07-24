@@ -11,6 +11,9 @@ void main() {
   runApp(GameWidget(game: CollisionBenchmark()));
 }
 
+// USAGE: Switch between HasQuadTreeCollisionDetection and HasCollisionDetection
+//        in the class definition below to see the difference.
+
 class CollisionBenchmark extends FlameGame with HasQuadTreeCollisionDetection {
   static const robotCount = 800;
 
@@ -29,9 +32,15 @@ class CollisionBenchmark extends FlameGame with HasQuadTreeCollisionDetection {
     const offscreenOffset = 100.0;
     // ignore: unnecessary_type_check
     if (this is HasQuadTreeCollisionDetection) {
+      // ignore: unnecessary_cast
       (this as HasQuadTreeCollisionDetection).initializeCollisionDetection(
-          mapDimensions: Rect.fromLTRB(-offscreenOffset, -offscreenOffset,
-              size.x + offscreenOffset, size.y + offscreenOffset));
+        mapDimensions: Rect.fromLTRB(
+          -offscreenOffset,
+          -offscreenOffset,
+          size.x + offscreenOffset,
+          size.y + offscreenOffset,
+        ),
+      );
     }
 
     final paint = BasicPalette.gray.paint()
@@ -95,10 +104,12 @@ class CollisionBenchmark extends FlameGame with HasQuadTreeCollisionDetection {
         '$robotCount robots (only ${index + 1} spawned)');
 
     add(FpsTextComponent(decimalPlaces: 2));
-    add(TextComponent(
-      text: label,
-      position: Vector2(20, size.y - 40),
-    ));
+    add(
+      TextComponent(
+        text: label,
+        position: Vector2(20, size.y - 40),
+      ),
+    );
   }
 }
 
@@ -106,7 +117,7 @@ class Robot extends PositionComponent
     with CollisionCallbacks, HasGameRef<CollisionBenchmark> {
   static final Random _random = Random(42);
 
-  final _paint = Paint()..color = Color(0x99FFFFFF);
+  final _paint = Paint()..color = const Color(0x99FFFFFF);
 
   late final RectangleHitbox _ownHitbox;
 
@@ -123,10 +134,12 @@ class Robot extends PositionComponent
     _ownHitbox = RectangleHitbox()..isSolid = true;
     add(_ownHitbox);
 
-    add(RectangleComponent(
-      size: size,
-      paint: _paint,
-    ));
+    add(
+      RectangleComponent(
+        size: size,
+        paint: _paint,
+      ),
+    );
   }
 
   @override
@@ -154,15 +167,15 @@ class Robot extends PositionComponent
     if (other == game.screenHitbox) {
       // Hit the border.
       position = Vector2.random(_random)..multiply(gameRef.size);
-      _paint.color = Color(0x99FFFF00);
+      _paint.color = const Color(0x99FFFF00);
     } else {
-      _paint.color = Color(0x99FF0000);
+      _paint.color = const Color(0x99FF0000);
     }
   }
 
   @override
   void onCollisionEnd(PositionComponent other) {
     super.onCollisionEnd(other);
-    _paint.color = Color(0x99FFFFFF);
+    _paint.color = const Color(0x99FFFFFF);
   }
 }

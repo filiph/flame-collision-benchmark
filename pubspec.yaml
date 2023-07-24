@@ -8,18 +8,16 @@ environment:
   sdk: '>=3.0.6 <4.0.0'
 
 dependencies:
-  flutter:
-    sdk: flutter
-
   flame:
     path: ../flame-engine/packages/flame
+  flutter:
+    sdk: flutter
   meta: ^1.8.0
 
 dev_dependencies:
+  flame_lint: ^1.0.0
   flutter_test:
     sdk: flutter
-
-  flame_lint: ^1.0.0
   test: any
 
 # The following section is specific to Flutter packages.
