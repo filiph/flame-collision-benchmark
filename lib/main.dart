@@ -17,10 +17,13 @@ void main() {
 class CollisionBenchmark extends FlameGame with HasQuadTreeCollisionDetection {
   static const robotCount = 800;
 
+  static const int percentStatic = 99;
+
   late final String label =
       // ignore: unnecessary_type_check
       '${this is HasQuadTreeCollisionDetection ? 'QuadTree' : 'Standard'} '
       'with $robotCount entities, '
+      '$percentStatic% static, '
       '${kDebugMode ? 'debug' : 'profile'} mode, '
       'normal';
 
@@ -92,9 +95,16 @@ class CollisionBenchmark extends FlameGame with HasQuadTreeCollisionDetection {
     );
 
     var index = 0;
-    for (var y = 20.0; y < size.y && index < robotCount; y += 20) {
+    const portionStatic = percentStatic / 100;
+    final random = Random(42);
+    for (var y = 20.0; y < size.y && index < robotCount; y += 30) {
       for (var x = 20.0; x < size.x && index < robotCount; x += 20) {
-        add(Robot(index)..position.setValues(x, y));
+        // Every n-th robot is static, depending on portionStatic.
+        final isStatic = random.nextDouble() < portionStatic;
+        add(Robot(
+          index,
+          isStatic: isStatic,
+        )..position.setValues(x, y));
         index++;
       }
     }
@@ -123,9 +133,11 @@ class Robot extends PositionComponent
 
   final int id;
 
+  final bool isStatic;
+
   final double _offset;
 
-  Robot(this.id)
+  Robot(this.id, {required this.isStatic})
       : _offset = Random(42 + id).nextDouble() * 2 * pi,
         super(size: Vector2(10, 20), anchor: Anchor.center);
 
@@ -145,6 +157,10 @@ class Robot extends PositionComponent
   @override
   void update(double dt) {
     super.update(dt);
+
+    if (isStatic) {
+      return;
+    }
 
     const turningSpeed = 0.2;
     const movementSpeed = 50.0;
